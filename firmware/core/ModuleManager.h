@@ -195,7 +195,7 @@ public:
 
 private:
     bool _checkPermissions(const ModuleManifest& manifest) const;
-    bool _parseManifeest(const String& json, ModuleManifest& out) const;
+    bool _parseManifest(const String& json, ModuleManifest& out) const;
 
     CoreAPI&                  _api;
     bool                      _labMode;

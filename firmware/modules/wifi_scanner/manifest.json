@@ -1,0 +1,9 @@
+{
+  "id":          "wifi_scanner",
+  "name":        "Wi-Fi Scanner",
+  "version":     "1.0.0",
+  "author":      "SkullGate",
+  "description": "Passive Wi-Fi AP scanner. Logs SSID/BSSID/RSSI/channel JSON to SD. Registers an LVGL screen showing the AP list.",
+  "permissions": ["wifi_scan", "sd_write", "ui"],
+  "lab_mode":    false
+}

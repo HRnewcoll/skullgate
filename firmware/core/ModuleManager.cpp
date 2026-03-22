@@ -8,9 +8,9 @@
 #include "../drivers/SdManager.h"
 
 // ── Lab Mode configuration ────────────────────────────────────────────────────
-// The PIN is intentionally simple for demo purposes.
-// In production, store a bcrypt hash of the PIN in the SD flag file.
 static constexpr char LAB_MODE_FLAG_PATH[] = "/lab_mode.flag";
+// DEMO PIN — for production, store a bcrypt/argon2 hash of the PIN in the
+// SD flag file and compare hashes. Do NOT ship with a hardcoded PIN.
 static constexpr char LAB_MODE_DEFAULT_PIN[] = "1337";
 
 namespace skullgate {
@@ -190,7 +190,7 @@ bool ModuleManager::_checkPermissions(const ModuleManifest& manifest) const {
     return true;
 }
 
-bool ModuleManager::_parseManifeest(const String& json,
+bool ModuleManager::_parseManifest(const String& json,
                                      ModuleManifest& out) const {
     StaticJsonDocument<1024> doc;
     if (deserializeJson(doc, json) != DeserializationError::Ok) return false;

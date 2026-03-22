@@ -32,6 +32,7 @@ UiManager::UiManager(DisplayAdapter* display, TouchAdapter* touch)
 }
 
 bool UiManager::init() {
+    _lastTick = millis(); // Initialise to current time to avoid large tick on first loop()
     if (!_display) {
         Serial.println("[UiManager] No display — headless mode");
         return true; // Headless is valid

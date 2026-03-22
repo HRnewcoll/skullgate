@@ -39,3 +39,23 @@
 
 # debug information files
 *.dwo
+
+# ── PlatformIO ────────────────────────────────────────────────────────────────
+.pio/
+.pioenvs/
+.piolibdeps/
+.clang_complete
+.gcc-flags.json
+
+# ── IDE / Editor ──────────────────────────────────────────────────────────────
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# ── macOS ────────────────────────────────────────────────────────────────────
+.DS_Store
+*.DS_Store
+
+# ── Logs ──────────────────────────────────────────────────────────────────────
+*.log

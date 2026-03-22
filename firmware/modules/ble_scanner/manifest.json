@@ -1,0 +1,9 @@
+{
+  "id":          "ble_scanner",
+  "name":        "BLE Scanner",
+  "version":     "1.0.0",
+  "author":      "SkullGate",
+  "description": "Passive BLE device scanner — no scan requests, no connections",
+  "permissions": ["ble_scan", "sd_write", "ui"],
+  "lab_mode":    false
+}

@@ -7,10 +7,12 @@
  *   - TouchAdapter    (XPT2046 / GT911 / none)
  *   - SdManager       (SPI SD card)
  *   - WifiManager     (passive scan only — Recon-Only safe)
+ *   - BleManager      (passive BLE scan only — Recon-Only safe)
  *   - BusManager      (SPI / I2C arbitration)
  *
  * SAFETY: Wi-Fi is initialised in STATION+SCAN mode with no AP, no
  * transmission except probe requests implicit in active scanning.
+ * BLE is initialised in passive scan mode — no advertisements emitted.
  * Lab Mode features that transmit are gated by the ModuleManager permission
  * system and are NEVER enabled here.
  */
@@ -25,6 +27,7 @@ namespace skullgate {
     class TouchAdapter;
     class SdManager;
     class WifiManager;
+    class BleManager;
     class BusManager;
 }
 
@@ -55,6 +58,9 @@ public:
     /// Returns the Wi-Fi manager (always present on ESP32).
     WifiManager*    wifi()    const { return _wifi; }
 
+    /// Returns the BLE manager (always present on ESP32 variants with BLE).
+    BleManager*     ble()     const { return _ble; }
+
     /// Returns the bus manager (SPI/I2C arbitration).
     BusManager*     bus()     const { return _bus; }
 
@@ -65,6 +71,7 @@ private:
     TouchAdapter*   _touch;
     SdManager*      _sd;
     WifiManager*    _wifi;
+    BleManager*     _ble;
     BusManager*     _bus;
 };
 

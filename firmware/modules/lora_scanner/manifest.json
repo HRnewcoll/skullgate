@@ -1,0 +1,9 @@
+{
+  "id":          "lora_scanner",
+  "name":        "LoRa Scanner",
+  "version":     "1.0.0",
+  "author":      "SkullGate",
+  "description": "Passive LoRa / sub-GHz packet scanner (SX127x / CC1101). Requires BOARD_HAS_LORA hardware",
+  "permissions": ["radio_rx", "sd_write", "ui"],
+  "lab_mode":    false
+}

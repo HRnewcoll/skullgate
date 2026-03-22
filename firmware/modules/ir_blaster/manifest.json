@@ -1,0 +1,9 @@
+{
+  "id":          "ir_blaster",
+  "name":        "IR Blaster",
+  "version":     "1.0.0",
+  "author":      "SkullGate",
+  "description": "IR code transmitter/receiver via ESP32 RMT peripheral. Send saved codes to your own devices",
+  "permissions": ["ir_tx", "sd_read", "sd_write", "ui"],
+  "lab_mode":    false
+}

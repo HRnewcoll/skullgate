@@ -1,0 +1,9 @@
+{
+  "id":          "mesh_chat",
+  "name":        "Mesh Chat",
+  "version":     "1.0.0",
+  "author":      "SkullGate",
+  "description": "ESP-NOW peer-to-peer mesh chat between SkullGate devices — no Wi-Fi AP required",
+  "permissions": ["esp_now", "sd_write", "ui"],
+  "lab_mode":    false
+}

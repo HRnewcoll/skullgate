@@ -8,6 +8,7 @@
 #include "../drivers/TouchAdapter.h"
 #include "../drivers/SdManager.h"
 #include "../drivers/WifiManager.h"
+#include "../drivers/BleManager.h"
 #include "../drivers/BusManager.h"
 
 namespace skullgate {
@@ -18,11 +19,13 @@ DriverRegistry::DriverRegistry(const BoardProfile& profile)
     , _touch(nullptr)
     , _sd(nullptr)
     , _wifi(nullptr)
+    , _ble(nullptr)
     , _bus(nullptr)
 {}
 
 DriverRegistry::~DriverRegistry() {
     // Drivers are heap-allocated; clean up in reverse init order.
+    delete _ble;
     delete _wifi;
     delete _sd;
     delete _touch;
@@ -77,6 +80,13 @@ bool DriverRegistry::init() {
     if (!_wifi->init()) {
         Serial.println("[DriverRegistry] WifiManager init failed");
         ok = false;
+    }
+
+    // ── BLE (passive scan only) ───────────────────────────────────────────────
+    _ble = new BleManager();
+    if (!_ble->init()) {
+        Serial.println("[DriverRegistry] BleManager init failed (continuing)");
+        // Non-fatal: some ESP32-C3 variants have limited BLE support
     }
 
     return ok;

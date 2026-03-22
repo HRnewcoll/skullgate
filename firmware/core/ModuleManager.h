@@ -59,13 +59,16 @@ static const char* const KNOWN_PERMISSIONS[] = {
     "ble_scan",  "ble_tx",
     "sd_read",   "sd_write",
     "ui",        "serial",
-    "net_proxy",
+    "net_proxy", "esp_now",
+    "radio_rx",  "nfc_read",  "ir_tx",
+    "ota",       "wifi_promiscuous",
     nullptr
 };
 
 /// Permissions that require Lab Mode to be active.
 static const char* const LAB_MODE_PERMISSIONS[] = {
     "wifi_connect", "wifi_tx", "ble_tx", "net_proxy",
+    "ota", "wifi_promiscuous",
     nullptr
 };
 

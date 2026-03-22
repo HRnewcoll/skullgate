@@ -53,7 +53,10 @@ bool DriverRegistry::init() {
 
     // ── Touch ─────────────────────────────────────────────────────────────────
     if (_profile.has("touch") && _profile.touch().driver != "None") {
-        _touch = new TouchAdapter(_profile.touch());
+        // Pass display dimensions from the profile for accurate coordinate mapping
+        uint16_t dw = _profile.has("display") ? _profile.display().width  : 240;
+        uint16_t dh = _profile.has("display") ? _profile.display().height : 320;
+        _touch = new TouchAdapter(_profile.touch(), dw, dh);
         if (!_touch->init()) {
             Serial.println("[DriverRegistry] TouchAdapter init failed (continuing)");
             // Non-fatal — fallback to button navigation

@@ -132,6 +132,21 @@ async function readBytes(length, timeoutMs = 3000) {
 //   3. Delegates actual flashing to esptool-js if loaded, or stubs it out.
 
 const ESP_SYNC      = 0x08;
+/**
+ * SYNC_PAYLOAD — ESP32 ROM bootloader SYNC command frame.
+ *
+ * Structure (SLIP-framed):
+ *   0xC0              — SLIP frame start
+ *   0x00              — Direction: host → ESP
+ *   ESP_SYNC (0x08)   — Command: SYNC
+ *   0x24 0x00         — Data length: 36 bytes
+ *   0x00 0x00 0x00 0x00 — Checksum (0 for SYNC)
+ *   0x07 0x07 0x12 0x20 — Magic bytes (pattern required by ROM)
+ *   0x55 × 32         — 32 bytes of 0x55 (sync pattern for baud detection)
+ *   0xC0              — SLIP frame end
+ *
+ * Reference: https://docs.espressif.com/projects/esptool/en/latest/esp32/advanced-topics/serial-protocol.html
+ */
 const SYNC_PAYLOAD  = new Uint8Array([
   0xC0, 0x00, ESP_SYNC, 0x24, 0x00, 0x00, 0x00, 0x00, 0x00,
   0x07, 0x07, 0x12, 0x20,

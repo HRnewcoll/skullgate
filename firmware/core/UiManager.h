@@ -74,9 +74,9 @@ private:
     TouchAdapter*   _touch;
 
     // LVGL driver structs
-    lv_disp_drv_t   _dispDrv;
-    lv_disp_buf_t   _dispBuf;   // LVGL 7.x name; LVGL 8.x uses lv_disp_draw_buf_t
-    lv_indev_drv_t  _indevDrv;
+    lv_disp_drv_t      _dispDrv;
+    lv_disp_draw_buf_t _dispBuf;   // LVGL 8.x draw buffer (lv_disp_draw_buf_t)
+    lv_indev_drv_t     _indevDrv;
 
     // Draw buffer — two lines of pixels for double-buffered flush
     // Size: width * 2 * sizeof(lv_color_t)

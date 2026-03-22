@@ -15,7 +15,14 @@ namespace skullgate {
 
 class TouchAdapter {
 public:
-    explicit TouchAdapter(const TouchPins& pins);
+    /**
+     * @param pins       Touch hardware configuration from the board profile.
+     * @param dispWidth  Display width in pixels (used for coordinate mapping).
+     * @param dispHeight Display height in pixels (used for coordinate mapping).
+     */
+    TouchAdapter(const TouchPins& pins,
+                 uint16_t dispWidth  = 240,
+                 uint16_t dispHeight = 320);
 
     /// Initialise the touch controller. Returns false on failure.
     bool init();
@@ -32,11 +39,13 @@ public:
     bool read(int16_t& x, int16_t& y);
 
 private:
-    /// Map raw ADC coordinates to screen pixels.
+    /// Map raw ADC coordinates to screen pixels using the display dimensions.
     void _calibrate(int16_t rawX, int16_t rawY,
                     int16_t& outX, int16_t& outY) const;
 
     TouchPins _pins;
+    uint16_t  _dispWidth;
+    uint16_t  _dispHeight;
     bool      _ready;
 };
 

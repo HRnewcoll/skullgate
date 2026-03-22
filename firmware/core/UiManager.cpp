@@ -26,7 +26,7 @@ UiManager::UiManager(DisplayAdapter* display, TouchAdapter* touch)
     , _homeScreen(nullptr), _launcherScreen(nullptr), _logScreen(nullptr)
     , _lblWifi(nullptr), _lblSd(nullptr), _lblMode(nullptr)
     , _drawBuf1(nullptr), _drawBuf2(nullptr)
-    , _lastTick(0)
+    , _lastTick(0) // Will be properly set to millis() in init()
 {
     s_instance = this;
 }

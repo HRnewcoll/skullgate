@@ -19,8 +19,10 @@ static constexpr uint8_t XPT_CMD_Y = 0x90; // Measure Y
 // Minimum valid ADC reading — values below this are noise/not-touched
 static constexpr int16_t XPT2046_MIN_VALID_ADC = 100;
 
-TouchAdapter::TouchAdapter(const TouchPins& pins)
-    : _pins(pins), _ready(false)
+TouchAdapter::TouchAdapter(const TouchPins& pins,
+                           uint16_t dispWidth,
+                           uint16_t dispHeight)
+    : _pins(pins), _dispWidth(dispWidth), _dispHeight(dispHeight), _ready(false)
 {}
 
 bool TouchAdapter::init() {
@@ -94,11 +96,6 @@ void TouchAdapter::_calibrate(int16_t rawX, int16_t rawY,
     // and  raw [y_min..y_max] → [0..display_height]
     // Swap/invert axes per board profile.
 
-    // These display dimensions come from the profile. Use 240x320 as default.
-    // (A more complete implementation would receive display size from profile.)
-    constexpr int16_t DISP_W = 240;
-    constexpr int16_t DISP_H = 320;
-
     float nx = (float)(rawX - _pins.x_min) / (float)(_pins.x_max - _pins.x_min);
     float ny = (float)(rawY - _pins.y_min) / (float)(_pins.y_max - _pins.y_min);
 
@@ -110,11 +107,11 @@ void TouchAdapter::_calibrate(int16_t rawX, int16_t rawY,
     if (_pins.invert_y) ny = 1.0f - ny;
 
     if (_pins.swap_xy) {
-        outX = (int16_t)(ny * DISP_W);
-        outY = (int16_t)(nx * DISP_H);
+        outX = (int16_t)(ny * _dispWidth);
+        outY = (int16_t)(nx * _dispHeight);
     } else {
-        outX = (int16_t)(nx * DISP_W);
-        outY = (int16_t)(ny * DISP_H);
+        outX = (int16_t)(nx * _dispWidth);
+        outY = (int16_t)(ny * _dispHeight);
     }
 }
 

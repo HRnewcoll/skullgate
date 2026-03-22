@@ -177,8 +177,15 @@ void WifiScannerModule::_updateList(const std::vector<ApInfo>& aps) {
 void WifiScannerModule::_logToSD(const std::vector<ApInfo>& aps) {
     if (!_api->hasPermission("sd_write")) return;
 
-    // Build JSON document
-    StaticJsonDocument<4096> doc;
+    // Calculate required document capacity:
+    //   ~100 bytes per AP (ssid/bssid/rssi/channel/enc) + 64 bytes overhead
+    const size_t capacity = JSON_OBJECT_SIZE(2)
+                          + JSON_ARRAY_SIZE(aps.size())
+                          + aps.size() * JSON_OBJECT_SIZE(5)
+                          + 64 + aps.size() * 100;
+
+    // Use DynamicJsonDocument so large AP lists don't overflow the stack.
+    DynamicJsonDocument doc(capacity);
     doc["timestamp"] = millis();
 
     JsonArray arr = doc.createNestedArray("aps");

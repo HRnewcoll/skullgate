@@ -27,6 +27,13 @@
 // ── Module self-registration (include to pull in REGISTER_MODULE statics) ────
 #include "modules/wifi_scanner/WifiScannerModule.h"
 #include "modules/board_test/BoardTestModule.h"
+#include "modules/ble_scanner/BleScannerModule.h"
+#include "modules/pcap_logger/PcapLoggerModule.h"
+#include "modules/mesh_chat/MeshChatModule.h"
+#include "modules/ota_update/OtaUpdateModule.h"
+#include "modules/lora_scanner/LoraScannerModule.h"
+#include "modules/nfc_reader/NfcReaderModule.h"
+#include "modules/ir_blaster/IrBlasterModule.h"
 
 using namespace skullgate;
 
@@ -91,19 +98,49 @@ void setup() {
         gDrivers->wifi(),
         gDrivers->sd(),
         gUi,
+        gDrivers->ble(),   // Pass BleManager so bleScan() works
         false /* labMode off */
     );
     // Default permissions available to all modules in Recon-Only mode
-    gCoreAPI->setPermissions({"wifi_scan", "sd_read", "sd_write", "ui", "serial"});
+    gCoreAPI->setPermissions({
+        "wifi_scan", "sd_read", "sd_write", "ui", "serial",
+        "ble_scan", "esp_now",
+        "radio_rx", "nfc_read", "ir_tx"
+    });
+
+    // Wire the Lab Mode PIN screen: when the user submits a PIN in the UI,
+    // the ModuleManager validates the SD flag + PIN and unlocks Lab Mode.
+    // We set the callback after gModules is constructed below.
 
     // ── 5. Module manager ─────────────────────────────────────────────────────
     gModules = new ModuleManager(*gCoreAPI);
     int loaded = gModules->loadAll();
     Serial.printf("[main] Modules loaded: %d\n", loaded);
 
+    // Now register the PIN callback so the UI can trigger Lab Mode unlock.
+    gUi->setPinCallback([](const String& pin) {
+        if (!gModules || !gCoreAPI || !gUi) return;
+        if (gModules->unlockLabMode(pin)) {
+            gCoreAPI->setLabMode(true);
+            gUi->setModeLabel("Lab Mode");
+            Serial.println("[main] Lab Mode UNLOCKED");
+        } else {
+            gUi->setModeLabel("Recon-Only (bad PIN)");
+            Serial.println("[main] Lab Mode unlock failed (wrong PIN or no SD flag)");
+        }
+        gUi->showHome(); // Return to dashboard regardless of outcome
+    });
+    // The PIN screen is now registered — it won't show until the user taps "Lab".
+
     // Update UI with discovered APs (quick initial scan)
     auto aps = gCoreAPI->wifiScan();
     gUi->setWifiStatus(false, aps.size());
+
+    // Initial battery reading (ADC pin 35 is common for battery on CYD boards)
+    // The voltage divider typically gives Vbat/2 on the ADC pin.
+    // ADC range 0–4095 → 0–3.3 V (1 V ref × 3.3 V supply), × 2 for divider.
+    float batV = static_cast<float>(analogRead(35)) / 4095.0f * 3.3f * 2.0f;
+    gUi->setBatteryVoltage(batV > 2.0f ? batV : 0.0f); // filter bogus readings
 
     Serial.println("[main] Boot complete — entering main loop");
 }
@@ -116,6 +153,15 @@ void loop() {
 
     // Drive the active module's loop()
     if (gModules) gModules->loop();
+
+    // Update battery voltage every ~10 s
+    static uint32_t lastBatUpdate = 0;
+    uint32_t now = millis();
+    if (now - lastBatUpdate >= 10000) {
+        lastBatUpdate = now;
+        float batV = static_cast<float>(analogRead(35)) / 4095.0f * 3.3f * 2.0f;
+        if (gUi) gUi->setBatteryVoltage(batV > 2.0f ? batV : 0.0f);
+    }
 
     // Yield to FreeRTOS / watchdog
     delay(1);

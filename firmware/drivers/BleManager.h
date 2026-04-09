@@ -21,17 +21,11 @@
 #include <Arduino.h>
 #include <vector>
 
+// BleDevice is defined in CoreAPI.h; include it here so BleManager::scan()
+// can return the shared type without duplicating the struct.
+#include "../core/CoreAPI.h"
+
 namespace skullgate {
-
-// ── BLE device descriptor ────────────────────────────────────────────────────
-
-struct BleDevice {
-    String  mac;         ///< MAC address as "AA:BB:CC:DD:EE:FF"
-    String  name;        ///< Advertised device name (empty if not broadcast)
-    int8_t  rssi;        ///< Signal strength in dBm
-    bool    connectable; ///< True if device advertises as connectable
-    uint8_t addrType;    ///< 0 = public, 1 = random
-};
 
 // ── BleManager ───────────────────────────────────────────────────────────────
 

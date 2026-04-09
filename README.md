@@ -31,13 +31,13 @@ Using SkullGate on networks or devices you do not own or have explicit written p
 | Lab Mode gating (SD flag + PIN) | ✅ Phase 1 |
 | Web flasher (WebSerial) | ✅ Phase 1 |
 | GitHub Actions CI | ✅ Phase 1 |
-| BLE scanner | 🔄 Phase 2 |
-| LoRa / CC1101 radio modules | 🔄 Phase 2 |
-| Mesh chat (ESP-NOW) | 🔄 Phase 2 |
-| GPS / wardriving | 🔄 Phase 2 |
-| WireGuard VPN | 🔄 Phase 2 |
-| PCAP-lite logging | 🔄 Phase 2 |
-| OTA update | 🔄 Phase 2 |
+| BLE scanner | ✅ Phase 2 |
+| LoRa / CC1101 radio modules | ✅ Phase 2 |
+| Mesh chat (ESP-NOW) | ✅ Phase 2 |
+| GPS / wardriving | 🔄 Phase 3 |
+| WireGuard VPN | 🔄 Phase 3 |
+| PCAP-lite logging | ✅ Phase 2 |
+| OTA update | ✅ Phase 2 |
 
 ---
 

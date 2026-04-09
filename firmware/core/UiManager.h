@@ -14,6 +14,7 @@
 
 #include <Arduino.h>
 #include <vector>
+#include <functional>
 
 // lvgl header — lv_conf.h must be reachable on the include path.
 #include <lvgl.h>
@@ -60,6 +61,30 @@ public:
     void setSdStatus(bool mounted);
     void setModeLabel(const String& mode);
 
+    /// Update battery voltage display (0.0 = unknown / no reading).
+    void setBatteryVoltage(float voltage);
+
+    /**
+     * @brief Register the PIN submit callback without navigating to the PIN screen.
+     *
+     * The PIN screen is shown when the user taps "Lab" on the home dashboard.
+     * Use this to register the callback during setup before entering the main loop.
+     *
+     * @param onSubmit  Callback invoked with the entered PIN string on confirmation.
+     */
+    void setPinCallback(std::function<void(const String&)> onSubmit);
+
+    /**
+     * @brief Show the Lab Mode PIN entry screen.
+     *
+     * Displays a numeric keypad.  When the user submits a PIN, @p onSubmit
+     * is called with the entered string.  The caller is responsible for
+     * validating the PIN and calling setModeLabel() / showHome() as needed.
+     *
+     * @param onSubmit  Callback invoked with the entered PIN string.
+     */
+    void showPinScreen(std::function<void(const String&)> onSubmit);
+
 private:
     // LVGL flush + input callbacks (static, required by LVGL C API)
     static void _flushCb(lv_disp_drv_t* drv, const lv_area_t* area,
@@ -69,6 +94,7 @@ private:
     void _buildHomeDashboard();
     void _buildLauncherScreen();
     void _buildLogViewer();
+    void _buildPinScreen();
 
     DisplayAdapter* _display;
     TouchAdapter*   _touch;
@@ -88,11 +114,18 @@ private:
     lv_obj_t* _homeScreen;
     lv_obj_t* _launcherScreen;
     lv_obj_t* _logScreen;
+    lv_obj_t* _pinScreen;
 
     // Home dashboard widgets
     lv_obj_t* _lblWifi;
     lv_obj_t* _lblSd;
     lv_obj_t* _lblMode;
+    lv_obj_t* _lblBattery;  ///< Battery voltage indicator
+
+    // PIN screen state
+    lv_obj_t* _pinDisplay;  ///< Shows masked PIN digits
+    String    _pinBuffer;   ///< Accumulated PIN digits
+    std::function<void(const String&)> _pinCallback;
 
     // Module-registered screens
     std::vector<ScreenEntry> _screens;

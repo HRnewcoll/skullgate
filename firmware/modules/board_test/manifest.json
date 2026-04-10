@@ -1,0 +1,9 @@
+{
+  "id":          "board_test",
+  "name":        "Board Test",
+  "version":     "1.0.0",
+  "author":      "SkullGate",
+  "description": "Tests display, touch, SD, and Wi-Fi. Displays pass/fail for each subsystem.",
+  "permissions": ["wifi_scan", "sd_read", "sd_write", "ui"],
+  "lab_mode":    false
+}

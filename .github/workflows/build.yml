@@ -1,0 +1,143 @@
+name: SkullGate CI — PlatformIO Build
+
+on:
+  push:
+    branches: [ "main", "develop", "copilot/**" ]
+  pull_request:
+    branches: [ "main", "develop" ]
+
+# Restrict default token permissions to read-only for all jobs
+permissions:
+  contents: read
+
+jobs:
+  # ── Build all board environments ─────────────────────────────────────────────
+  build:
+    name: Build (${{ matrix.env }})
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    strategy:
+      fail-fast: false
+      matrix:
+        env:
+          - esp32dev
+          - esp32-s3
+          - esp32-c3
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Cache PlatformIO packages
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.platformio/.cache
+            ~/.platformio/packages
+          key: ${{ runner.os }}-pio-${{ matrix.env }}-${{ hashFiles('platformio.ini') }}
+          restore-keys: |
+            ${{ runner.os }}-pio-${{ matrix.env }}-
+            ${{ runner.os }}-pio-
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install PlatformIO
+        run: pip install platformio
+
+      - name: Build firmware (${{ matrix.env }})
+        run: pio run -e ${{ matrix.env }}
+
+      - name: Upload firmware binary
+        uses: actions/upload-artifact@v4
+        with:
+          name: firmware-${{ matrix.env }}
+          path: .pio/build/${{ matrix.env }}/firmware.bin
+          if-no-files-found: warn
+
+  # ── Static analysis ───────────────────────────────────────────────────────────
+  static-check:
+    name: Static Analysis (cppcheck)
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install cppcheck
+        run: sudo apt-get install -y cppcheck
+
+      - name: Run cppcheck on firmware/core
+        run: |
+          cppcheck \
+            --enable=warning,style,performance,portability \
+            --suppress=missingIncludeSystem \
+            --suppress=unmatchedSuppression \
+            --error-exitcode=1 \
+            --inline-suppr \
+            -I firmware/core \
+            -I firmware/drivers \
+            firmware/core/ \
+            firmware/drivers/ \
+            firmware/modules/
+
+  # ── JSON manifest validation ──────────────────────────────────────────────────
+  validate-manifests:
+    name: Validate Module Manifests
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install jq
+        run: sudo apt-get install -y jq
+
+      - name: Validate board profiles (JSON)
+        run: |
+          echo "Validating board profiles..."
+          for f in firmware/boards/*.json; do
+            echo "  Checking $f"
+            jq empty "$f" || { echo "FAIL: $f is not valid JSON"; exit 1; }
+          done
+          echo "All board profiles are valid JSON."
+
+      - name: Validate module manifests (JSON)
+        run: |
+          echo "Validating module manifests..."
+          for f in firmware/modules/*/manifest.json; do
+            echo "  Checking $f"
+            jq empty "$f" || { echo "FAIL: $f is not valid JSON"; exit 1; }
+            # Check required fields
+            id=$(jq -r '.id // empty' "$f")
+            [ -n "$id" ] || { echo "FAIL: $f missing 'id' field"; exit 1; }
+            name=$(jq -r '.name // empty' "$f")
+            [ -n "$name" ] || { echo "FAIL: $f missing 'name' field"; exit 1; }
+          done
+          echo "All module manifests are valid."
+
+  # ── Web flasher validation ────────────────────────────────────────────────────
+  validate-web-flasher:
+    name: Validate Web Flasher
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Check web flasher files exist
+        run: |
+          for f in tools/web_flasher/index.html tools/web_flasher/app.js tools/web_flasher/style.css; do
+            [ -f "$f" ] || { echo "FAIL: Missing $f"; exit 1; }
+          done
+          echo "Web flasher files present."

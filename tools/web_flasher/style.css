@@ -1,0 +1,275 @@
+/* SkullGate Web Flasher — style.css */
+/* Dark cyber-deck aesthetic to match the firmware UI */
+
+:root {
+  --bg:          #0d0d0d;
+  --bg-card:     #161616;
+  --bg-input:    #1a1a1a;
+  --border:      #2a2a2a;
+  --accent:      #ff2222;
+  --accent-dim:  #8b0000;
+  --text:        #e0e0e0;
+  --text-muted:  #888;
+  --green:       #00ff44;
+  --orange:      #ffaa00;
+  --red:         #ff4444;
+  --blue:        #4488ff;
+  --font-mono:   'Courier New', Courier, monospace;
+  --radius:      6px;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-mono);
+  font-size: 14px;
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 24px 16px;
+}
+
+/* ── Header ─────────────────────────────────────────────────────────────────── */
+
+header {
+  text-align: center;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 24px;
+}
+
+header h1 {
+  font-size: 2em;
+  color: var(--accent);
+  letter-spacing: 2px;
+  text-shadow: 0 0 20px var(--accent-dim);
+}
+
+.subtitle {
+  color: var(--text-muted);
+  margin-top: 8px;
+}
+
+.notice {
+  margin-top: 12px;
+  padding: 8px 12px;
+  border-left: 3px solid var(--orange);
+  background: rgba(255, 170, 0, 0.06);
+  color: var(--orange);
+  font-size: 0.9em;
+  text-align: left;
+}
+
+/* ── Cards ──────────────────────────────────────────────────────────────────── */
+
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  margin-bottom: 16px;
+}
+
+.card h2 {
+  font-size: 1em;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 14px;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 8px;
+}
+
+/* ── Form rows ──────────────────────────────────────────────────────────────── */
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+}
+
+.row label {
+  min-width: 170px;
+  color: var(--text-muted);
+}
+
+.row .hint {
+  font-size: 0.82em;
+  color: var(--text-muted);
+}
+
+.presets {
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+input[type="file"],
+input[type="text"] {
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text);
+  padding: 6px 10px;
+  font-family: var(--font-mono);
+  font-size: 13px;
+}
+
+input[type="text"] {
+  width: 120px;
+}
+
+input[type="file"] {
+  cursor: pointer;
+}
+
+input:focus {
+  outline: 1px solid var(--accent);
+  border-color: var(--accent);
+}
+
+/* ── Buttons ────────────────────────────────────────────────────────────────── */
+
+.btn {
+  cursor: pointer;
+  border: none;
+  border-radius: var(--radius);
+  padding: 8px 18px;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: bold;
+  letter-spacing: 0.5px;
+  transition: background 0.15s, transform 0.1s;
+}
+
+.btn:active { transform: scale(0.97); }
+.btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.btn-primary  { background: var(--blue);   color: #000; }
+.btn-danger   { background: var(--accent); color: #fff; }
+.btn-secondary{ background: #333;          color: var(--text); }
+.btn-small    { padding: 4px 10px; font-size: 12px; background: #222; color: var(--text); }
+
+.btn-primary:hover:not(:disabled)   { background: #6699ff; }
+.btn-danger:hover:not(:disabled)    { background: #ff5555; }
+.btn-secondary:hover:not(:disabled) { background: #444; }
+.btn-small:hover                    { background: #333; }
+
+/* ── Status badge ───────────────────────────────────────────────────────────── */
+
+.status {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-left: 12px;
+}
+
+.status.connected    { background: rgba(0, 255, 68, 0.15); color: var(--green); }
+.status.disconnected { background: rgba(255, 68, 68, 0.15); color: var(--red); }
+
+/* ── Progress bar ───────────────────────────────────────────────────────────── */
+
+.progress-container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.progress-bar {
+  flex: 1;
+  height: 12px;
+  background: #222;
+  border-radius: 6px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent-dim), var(--accent));
+  border-radius: 6px;
+  transition: width 0.15s;
+}
+
+#progress-label {
+  min-width: 42px;
+  text-align: right;
+  color: var(--text-muted);
+  font-size: 12px;
+}
+
+/* ── Log output ─────────────────────────────────────────────────────────────── */
+
+.toolbar {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+#log-output {
+  background: #000;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 12px;
+  height: 220px;
+  overflow-y: auto;
+  font-size: 12px;
+  color: #ccc;
+  white-space: pre-wrap;
+  word-break: break-all;
+  scroll-behavior: smooth;
+}
+
+/* ── Warning box ────────────────────────────────────────────────────────────── */
+
+.warning-box {
+  background: rgba(255, 170, 0, 0.08);
+  border: 1px solid var(--orange);
+  border-radius: var(--radius);
+  color: var(--orange);
+  padding: 12px 16px;
+  margin-bottom: 16px;
+}
+
+/* ── Footer ─────────────────────────────────────────────────────────────────── */
+
+footer {
+  text-align: center;
+  margin-top: 32px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+  color: var(--text-muted);
+  font-size: 12px;
+}
+
+footer a { color: var(--accent); text-decoration: none; }
+footer a:hover { text-decoration: underline; }
+
+/* ── Utilities ──────────────────────────────────────────────────────────────── */
+
+.hidden { display: none !important; }
+
+/* ── Responsive ─────────────────────────────────────────────────────────────── */
+
+@media (max-width: 600px) {
+  header h1 { font-size: 1.4em; }
+  .row { flex-direction: column; align-items: flex-start; }
+  .row label { min-width: auto; }
+}

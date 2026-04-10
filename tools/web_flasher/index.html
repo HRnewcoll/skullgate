@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SkullGate Web Flasher</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+
+    <!-- Header -->
+    <header>
+      <h1>☠ SkullGate Web Flasher</h1>
+      <p class="subtitle">Flash SkullGate firmware directly from your browser using WebSerial.</p>
+      <p class="notice">
+        ⚠ <strong>Chrome or Edge 89+</strong> required. Firefox is not supported (no WebSerial API).
+      </p>
+    </header>
+
+    <!-- Compatibility warning (shown if WebSerial not available) -->
+    <div id="no-serial-warning" class="warning-box hidden">
+      <strong>WebSerial API not available.</strong>
+      Your browser does not support the Web Serial API. Please use Chrome or Edge 89+.
+    </div>
+
+    <!-- Step 1: Connect -->
+    <section class="card" id="step-connect">
+      <h2>Step 1 — Connect Device</h2>
+      <p>Hold the <strong>BOOT</strong> button on your ESP32, then press <strong>Connect</strong>.</p>
+      <button id="btn-connect" class="btn btn-primary">🔌 Connect to ESP32</button>
+      <span id="connection-status" class="status disconnected">Disconnected</span>
+    </section>
+
+    <!-- Step 2: Select firmware -->
+    <section class="card" id="step-firmware">
+      <h2>Step 2 — Select Firmware</h2>
+
+      <div class="row">
+        <label for="file-input">Firmware .bin file:</label>
+        <input type="file" id="file-input" accept=".bin" />
+      </div>
+
+      <div class="row">
+        <label for="flash-address">Flash address (hex):</label>
+        <input type="text" id="flash-address" value="0x10000" maxlength="10" />
+        <span class="hint">Default: 0x10000 for application firmware</span>
+      </div>
+
+      <div class="row presets">
+        <span>Presets:</span>
+        <button class="btn btn-small" onclick="setAddress('0x0')">Bootloader (0x0)</button>
+        <button class="btn btn-small" onclick="setAddress('0x8000')">Partition table (0x8000)</button>
+        <button class="btn btn-small" onclick="setAddress('0x10000')">Application (0x10000)</button>
+      </div>
+    </section>
+
+    <!-- Step 3: Flash -->
+    <section class="card" id="step-flash">
+      <h2>Step 3 — Flash</h2>
+
+      <div class="progress-container hidden" id="progress-container">
+        <div class="progress-bar">
+          <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
+        </div>
+        <span id="progress-label">0%</span>
+      </div>
+
+      <button id="btn-flash" class="btn btn-danger" disabled>⚡ Flash Firmware</button>
+      <button id="btn-erase" class="btn btn-secondary" disabled>🗑 Erase Flash</button>
+    </section>
+
+    <!-- Log output -->
+    <section class="card" id="step-log">
+      <h2>Log Output</h2>
+      <div class="toolbar">
+        <button class="btn btn-small" onclick="clearLog()">Clear</button>
+        <button class="btn btn-small" onclick="downloadLog()">Download log</button>
+      </div>
+      <pre id="log-output"></pre>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+      <p>
+        SkullGate is for <strong>your own devices</strong> and
+        <strong>explicitly permitted lab environments</strong> only.
+        Always comply with local laws and regulations.
+      </p>
+      <p><a href="https://github.com/HRnewcoll/skullgate" target="_blank">GitHub ↗</a></p>
+    </footer>
+
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

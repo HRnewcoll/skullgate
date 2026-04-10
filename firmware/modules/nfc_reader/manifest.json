@@ -1,0 +1,9 @@
+{
+  "id":          "nfc_reader",
+  "name":        "NFC Reader",
+  "version":     "1.0.0",
+  "author":      "SkullGate",
+  "description": "NFC/RFID tag reader via PN532. Reads UID and NDEF data from your own tags. Requires BOARD_HAS_NFC hardware",
+  "permissions": ["nfc_read", "sd_write", "ui"],
+  "lab_mode":    false
+}

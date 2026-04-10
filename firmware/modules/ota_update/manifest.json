@@ -1,0 +1,9 @@
+{
+  "id":          "ota_update",
+  "name":        "OTA Update",
+  "version":     "1.0.0",
+  "author":      "SkullGate",
+  "description": "Download and install firmware OTA from URL stored in /ota/config.json. Requires Lab Mode and Wi-Fi connection",
+  "permissions": ["wifi_connect", "sd_read", "ui", "ota"],
+  "lab_mode":    true
+}

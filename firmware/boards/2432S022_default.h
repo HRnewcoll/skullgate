@@ -1,0 +1,77 @@
+/**
+ * @file 2432S022_default.h
+ * @brief Compiled-in fallback board profile for the 2432S022 (CYD).
+ *
+ * This is identical to firmware/boards/2432S022.json serialised as a C string.
+ * It is used when the SD card is absent at first boot.
+ */
+
+#pragma once
+
+static const char* const BOARD_PROFILE_2432S022_JSON = R"JSON(
+{
+  "board_id": "2432S022",
+  "mcu": "esp32",
+  "flash_mb": 4,
+  "psram": false,
+  "display": {
+    "driver": "ST7789",
+    "width": 240,
+    "height": 320,
+    "rotation": 0,
+    "bus": "SPI",
+    "spi_host": "VSPI",
+    "pin_sclk": 14,
+    "pin_mosi": 13,
+    "pin_miso": 12,
+    "pin_cs":   15,
+    "pin_dc":   2,
+    "pin_rst":  -1,
+    "pin_bl":   21,
+    "bl_active_high": true,
+    "freq_write": 40000000,
+    "color_order": "RGB"
+  },
+  "touch": {
+    "driver": "XPT2046",
+    "bus": "SPI",
+    "spi_host": "VSPI",
+    "pin_sclk": 14,
+    "pin_mosi": 13,
+    "pin_miso": 12,
+    "pin_cs":   33,
+    "pin_irq":  36,
+    "x_min": 300,
+    "x_max": 3900,
+    "y_min": 300,
+    "y_max": 3900,
+    "swap_xy": false,
+    "invert_x": false,
+    "invert_y": false
+  },
+  "sd": {
+    "bus": "SPI",
+    "spi_host": "HSPI",
+    "pin_sclk": 18,
+    "pin_mosi": 23,
+    "pin_miso": 19,
+    "pin_cs":   5
+  },
+  "wifi": { "supported": true, "antenna": "onboard" },
+  "ble":  { "supported": true },
+  "uart": [
+    { "id": 0, "pin_tx": 1,  "pin_rx": 3 },
+    { "id": 1, "pin_tx": 17, "pin_rx": 16 }
+  ],
+  "i2c": [
+    { "id": 0, "pin_sda": 21, "pin_scl": 22, "freq": 400000 }
+  ],
+  "gpio": {
+    "led_builtin": -1,
+    "btn_boot": 0,
+    "neopixel": -1,
+    "neopixel_count": 0
+  },
+  "capabilities": ["display","touch","sd","wifi","ble","uart","i2c"]
+}
+)JSON";

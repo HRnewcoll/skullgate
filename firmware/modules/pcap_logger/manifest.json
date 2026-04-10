@@ -1,0 +1,9 @@
+{
+  "id":          "pcap_logger",
+  "name":        "PCAP Logger",
+  "version":     "1.0.0",
+  "author":      "SkullGate",
+  "description": "Wi-Fi frame capture to PCAP files on SD. Recon-Only: beacon frames. Lab Mode: all management frames on selected channel",
+  "permissions": ["wifi_scan", "wifi_promiscuous", "sd_write", "ui"],
+  "lab_mode":    true
+}
